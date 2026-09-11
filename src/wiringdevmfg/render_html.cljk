@@ -6,7 +6,7 @@
   all. This namespace drives the REAL actor stack
   (`wiringdevmfg.operation` -> `wiringdevmfg.governor` ->
   `wiringdevmfg.store`) through a scenario adapted from this repo's own
-  `wiringdevmfg.sim` demo driver (`clojure -M:dev:run`, run BEFORE this
+  `wiringdevmfg.sim` demo driver (`kbb -M:dev:run`, run BEFORE this
   file was written to confirm the real dispositions), and renders the
   resulting SSoT + audit ledger.
 
@@ -23,19 +23,19 @@
       bounds -- not a prose copy of them, so they cannot drift;
     - the seeded ids (`batch-001`..`batch-003`, `molder-001`,
       `test-bench-002`) are this repo's own `wiringdevmfg.store`
-      sample data, verified against `clojure -M:dev:run` before use.
+      sample data, verified against `kbb -M:dev:run` before use.
 
   Determinism: no timestamps and no randomness anywhere in the page
   content (the only dates shown are seed fields on the sample records).
   Two consecutive runs are byte-identical -- verify with
-  `clojure -M:dev:render-html $(mktemp -d)/a.html` twice + `cmp`.
+  `kbb -M:dev:render-html $(mktemp -d)/a.html` twice + `cmp`.
 
   Build-time invariant: `-main` counts the HARD governor holds in the
   resulting ledger and THROWS if that count is zero, so a future edit
   that quietly turns this page into a happy-path-only demo fails the
   build instead of shipping (precedent: cloud-itonami-isic-2513).
 
-  Usage: `clojure -M:dev:render-html [out-file]`
+  Usage: `kbb -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [jp-go-dds.skin]
             [clojure.java.io :as io]
@@ -494,7 +494,7 @@
 
      "  <section class=\"card\">\n"
      "    <h2>What this page is</h2>\n"
-     "    <p>Generated at build time by <code>wiringdevmfg.render-html</code> (<code>clojure -M:dev:render-html</code>)"
+     "    <p>Generated at build time by <code>wiringdevmfg.render-html</code> (<code>kbb -M:dev:render-html</code>)"
      " by actually running this repo's actor stack —"
      " <code>wiringdevmfg.operation</code> → <code>wiringdevmfg.governor</code> → <code>wiringdevmfg.store</code>."
      " Every id, quantity, disposition and hold reason below is read back out of the store or the run audit after"
