@@ -1,0 +1,32 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README: the ISIC 2733 plant moulds device housings, assembles contacts /
+;; terminals / screws into switches, sockets, plugs and junction boxes, and
+;; runs end-of-line tests. The robots' physical work: waiting in the mould
+;; until a thermoplastic housing wall can be ejected, and tensile-testing
+;; the brass strip the contacts are stamped from before it goes to the press.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-2733"
+ :cases
+ [{:id :housing-cool-in-mould
+   :kind :thermal
+   :procedure "a PA66 socket-outlet housing wall injected at 290 C cools against the 80 C mould until its mid-plane falls below 180 C (half wall, fixed mould face, symmetric mid-plane)"
+   :params {:conductivity-w-mk 0.25 :density-kg-m3 1140.0 :specific-heat-j-kgk 1700.0
+            :t0-c 290.0 :t-hot-c 80.0 :front-fixed? true :h-back-w-m2k 0.0
+            :threshold-c 180.0 :threshold-direction :falling :duration-s 60.0 :nodes 6}
+   :sweep {:param :thickness-m :values [0.0005 0.00075 0.001 0.0015 0.002]}
+   :quantity :time-to-threshold-s
+   :limit {:max 8.0 :basis "estimate: cooling share of a ~15 s housing moulding cycle; PA66 properties and the 180 C eject temperature are estimates"}
+   :boundary {:lo 0.0003 :hi 0.003}}
+  {:id :contact-strip-tensile
+   :kind :material
+   :procedure "tensile test of a 0.8 x 6 mm CuZn37 brass strip specimen from an incoming coil, before it is stamped into socket contacts"
+   :params {:length-m 0.05 :area-m2 4.8e-6 :youngs-modulus-pa 110.0e9 :hardening-pa 0.8e9
+            :density-kg-m3 8440.0 :max-force-n 2500.0}
+   :sweep {:param :yield-stress-pa :values [150.0e6 200.0e6 250.0e6 300.0e6 350.0e6]}
+   :quantity :yield-force-n
+   :limit {:min 1200.0 :basis "estimate: ~250 MPa (half-hard temper) over the 4.8 mm2 strip, the level the contact spring force was designed around"}
+   :boundary {:lo 100.0e6 :hi 400.0e6}}]}
